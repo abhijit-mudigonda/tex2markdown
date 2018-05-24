@@ -36,6 +36,7 @@ class replaceEnvironments:
 
     def replaceEnvironments(
             env_type: str,
+            thmcounter: int,
             input_text: str,
             ) -> str:
         """
@@ -69,32 +70,35 @@ class replaceEnvironments:
 
         if env_type in thmbox_envs:
             thmcounter += 1
-            env_output = box_string("theorem", env_type, thmcounter, input_text)
+            env_output = replaceEnvironments.boxString("theorem", env_type, thmcounter, input_text)
         elif env_type in defbox_envs:
             thmcounter += 1
-            env_output = box_string("definition", env_type, thmcounter, input_text)
+            env_output = replaceEnvironments.boxString("definition", env_type, thmcounter, input_text)
         elif env_type in exbox_envs:
             thmcounter += 1
-            env_output = box_string("example", env_type, thmcounter, input_text)
+            env_output = replaceEnvironments.boxString("example", env_type, thmcounter, input_text)
 
         elif env_type == "itemize":
             #Bullet points
             env_output = re.sub(r'\\item', r'-', input_text)
+
         elif env_type == "enumerate":
             #TODO need to make this number each thing rather than bullet points
             env_output = re.sub(r'\\item', r'-', input_text)
 
         elif env_type == "align":
-            #It's a quirk of mathjax that new lines don't work in align without 
-            #being in math mode
-            env_output = "\n$$".append(input_text.append("$$\n"))
+            #Because MathJax wants to see a string \\, but Markdown parses \\ as an escaped
+            #backslash and writes it as \ 
+            env_output = re.sub(r'\\\\', r'\\\\\\\\', input_text)
+
         elif env_type == "proof":
-            env_output = "*Proof*:".append(input_text)
+            env_output = "*Proof*: "+input_text
 
         else:
             #TODO warn the user that they might've made a mistake or
             #be missing desired functionality
-            pass
+            print("I don't recognize the environment", env_type)
+            env_output = input_text
 
         return env_output
         

@@ -16,22 +16,25 @@ class replaceEnvironments_test(unittest.TestCase):
         self.assertEqual(replaceEnvironments.boxString(test_env["env_type"], test_env["env_name"], test_env["thm_counter"], test_env["thm_txt"]), test_env["test_output"])
         
     def itemize_test(self):
-        test_input = " \
-        \\begin{itemize} \n \
-            \item maka \n \
-            \item soul \n \
-            \item medusa \n \
-            \item kid \n \
-        \\end{itemize}"
-
-        test_output = " \
-            - maka \n \
-            - soul \n \
-            - medusa \n \
-            - kid \n \
-            "
+        test_input = "\item maka\n \item soul\n"
+        test_output = "- maka\n - soul\n"
 
         self.assertEqual(replaceEnvironments.replaceEnvironments("itemize", test_input), test_output)
+
+    def align_test(self):
+        test_input = "x^2 + 5 & = x*x + 5 \\\\ \n & = x*x + 3 + 2"
+        test_output = "x^2 + 5 & = x*x + 5 \\\\\\\\ \n & = x*x + 3 + 2"
+
+        self.assertEqual(replaceEnvironments.replaceEnvironments("align", test_input), test_output)
+
+    def proof_test(self):
+        test_input = "blah blah"
+        test_output = "*Proof*: blah blah"
+
+        self.assertEqual(replaceEnvironments.replaceEnvironments("proof", test_input), test_output)
+
+        
+
 
 
 
