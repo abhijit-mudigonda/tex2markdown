@@ -24,10 +24,23 @@ class replaceEnvironments:
                 "example": "exbox.html"
                 }
 
+        env_names = {
+                "theorem": "Theorem",
+                "corollary": "Corollary",
+                "lemma": "Lemma",
+                "claim": "Claim",
+                "proposition": "Proposition",
+                "conjecture": "Conjecture",
+                "definition": "Definition",
+                "example": "Example",
+                "exercise": "Exercise",
+                }
+
+
         assert (box_type in box_files), "Invalid box type"
         box_string = "{{% include {0} thmname='{1}' thmnum={2} thmtxt='{3}' %}}".format(
                 box_files[box_type], 
-                env_name,
+                env_names[env_name],
                 thm_counter,
                 thm_txt
                 )

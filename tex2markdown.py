@@ -40,7 +40,7 @@ class tex2markdown:
 
         return paired_delimiters
 
-    def getEnvs(input_text: str) -> List[int, int]:
+    def getEnvs(input_text: str) -> List[Tuple[int, int]]:
         """
             input_text: LaTeX text
             output: A list of pairs of indices (index of start of \begin  
@@ -50,7 +50,8 @@ class tex2markdown:
         env_ends = [thm.end() for thm in re.finditer(r'\\end{', input_text)]
         envs = tex2markdown.pairDelimiters(env_starts, env_ends)
         return envs
- 
+
+        
     def tex2markdown(tex_contents: str) -> str:
         """
             input_text: A LaTeX string
@@ -60,22 +61,28 @@ class tex2markdown:
         tex_contents = replaceSpecialChars.replaceSpecialChars(tex_contents)
         tex_contents = replaceTextModifiers.replaceTextModifiers(tex_contents)
         thmcounter = 0
-        envs = getEnvs(tex_contents)
 
-        #Initialize output to the portion up until the first 
-        #environment, which is (hopefully) all done
-        output = tex_contents[0:envs[0][0]]
 
-        for (start_idx,end_idx) in envs:
-            env_type = tex_contents[start_idx+len("\\begin{"):end_idx].split('}')[0]
-            print("Processing an environment with type", env_type)
+        #This block is presently really inefficient, since it works with each 
+        #environment and recomputes the indices every time (because the changes
+        #will usually change the indices). Probably the right way to do this is
+        #to compute all the changes and then stitch it all together, but there 
+        #seemed to be some annoyances with nested environments and I got bored
+        #of coding
+
+        output = tex_contents
+        envs = tex2markdown.getEnvs(output)
+        while len(envs) != 0:
+            start_idx, end_idx = envs[0]
+            env_type = output[start_idx+len("\\begin{"):end_idx].split('}')[0]
+            print("Processing an environment with type:", env_type)
             begin_length = len("\\begin{}") + len(env_type)
             end_length = len("\\end{}") + len(env_type)
-            env_content = tex_contents[start_idx+begin_length:end_idx-len("\\end{")].strip()
+            env_content = output[start_idx+begin_length:end_idx-len("\\end{")].strip()
             environment_markdown = replaceEnvironments.replaceEnvironments(env_type, thmcounter, env_content)
-            output += environment_markdown 
-        #TODO need to put it back together correctly! This means... 
-        #at each point, 
+            output = output[0:start_idx]+environment_markdown+output[end_idx+len(env_type)+1:]
+            envs = tex2markdown.getEnvs(output)
+        return output
 
 
 if __name__ == "__main__":
