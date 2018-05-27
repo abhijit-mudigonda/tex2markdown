@@ -46,9 +46,19 @@ class tex2markdown:
             output: A list of pairs of indices (index of start of \begin  
             and index of end of \end) of environments
         """
+        skip_envs = [
+                "align",
+                ]
+
         env_starts = [thm.start() for thm in re.finditer(r'\\begin{', input_text)]
         env_ends = [thm.end() for thm in re.finditer(r'\\end{', input_text)]
         envs = tex2markdown.pairDelimiters(env_starts, env_ends)
+
+        for start_idx, end_idx in envs: 
+            env_type = input_text[start_idx+len("\\begin{"):end_idx].split('}')[0]
+            if env_type in skip_envs:
+                envs.remove((start_idx, end_idx))
+
         return envs
 
         
@@ -57,6 +67,7 @@ class tex2markdown:
             input_text: A LaTeX string
             returns: a markdown-compatible string
         """
+
 
         tex_contents = replaceSpecialChars.replaceSpecialChars(tex_contents)
         tex_contents = replaceTextModifiers.replaceTextModifiers(tex_contents)
@@ -75,10 +86,9 @@ class tex2markdown:
         while len(envs) != 0:
             start_idx, end_idx = envs[0]
             env_type = output[start_idx+len("\\begin{"):end_idx].split('}')[0]
-            print("Processing an environment with type:", env_type)
             begin_length = len("\\begin{}") + len(env_type)
             end_length = len("\\end{}") + len(env_type)
-            env_content = output[start_idx+begin_length:end_idx-len("\\end{")].strip()
+            env_content = output[start_idx+begin_length:end_idx-len("\\end{")]
             environment_markdown = replaceEnvironments.replaceEnvironments(env_type, thmcounter, env_content)
             output = output[0:start_idx]+environment_markdown+output[end_idx+len(env_type)+1:]
             envs = tex2markdown.getEnvs(output)

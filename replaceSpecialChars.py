@@ -11,7 +11,7 @@ class replaceSpecialChars:
             input_text: Mostly LaTeX text
             output: Escapes * and | appropriately for markdown
         """
-        output = re.sub('\*', '\\\*', input_text)
+        #output = re.sub('\*', '\\\*', input_text)
         output = re.sub('\|', '\\|', output)
 
         return output

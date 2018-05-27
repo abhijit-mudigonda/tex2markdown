@@ -38,7 +38,7 @@ class replaceEnvironments:
 
 
         assert (box_type in box_files), "Invalid box type"
-        box_string = "{{% include {0} thmname='{1}' thmnum={2} thmtxt='{3}' %}}".format(
+        box_string = "{{% include {0} thmname='{1}' thmnum={2} thmtxt=\"{3}\" %}}".format(
                 box_files[box_type], 
                 env_names[env_name],
                 thm_counter,
@@ -83,14 +83,16 @@ class replaceEnvironments:
 
         if env_type in thmbox_envs:
             thmcounter += 1
+            input_text = input_text.strip()
             env_output = replaceEnvironments.boxString("theorem", env_type, thmcounter, input_text)
         elif env_type in defbox_envs:
+            input_text = input_text.strip()
             thmcounter += 1
             env_output = replaceEnvironments.boxString("definition", env_type, thmcounter, input_text)
         elif env_type in exbox_envs:
+            input_text = input_text.strip()
             thmcounter += 1
             env_output = replaceEnvironments.boxString("example", env_type, thmcounter, input_text)
-
         elif env_type == "itemize":
             #Bullet points
             env_output = re.sub(r'\\item', r'-', input_text)
@@ -98,11 +100,6 @@ class replaceEnvironments:
         elif env_type == "enumerate":
             #TODO need to make this number each thing rather than bullet points
             env_output = re.sub(r'\\item', r'-', input_text)
-
-        elif env_type == "align":
-            #Because MathJax wants to see a string \\, but Markdown parses \\ as an escaped
-            #backslash and writes it as \ 
-            env_output = re.sub(r'\\\\', r'\\\\\\\\', input_text)
 
         elif env_type == "proof":
             env_output = "*Proof*: "+input_text
