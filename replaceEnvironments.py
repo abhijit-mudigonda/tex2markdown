@@ -34,11 +34,14 @@ class replaceEnvironments:
                 "definition": "Definition",
                 "example": "Example",
                 "exercise": "Exercise",
+                "problem": "Problem",
+                "question": "Question",
+                "remark": "Remark",
                 }
 
 
         assert (box_type in box_files), "Invalid box type"
-        box_string = "{{% include {0} thmname='{1}' thmnum={2} thmtxt=\"{3}\" %}}".format(
+        box_string = "{{% include {0} thmname='{1}' thmnum={2} thmtxt=\"{3}\" %}} <br \>".format(
                 box_files[box_type], 
                 env_names[env_name],
                 thm_counter,
@@ -79,6 +82,9 @@ class replaceEnvironments:
         exbox_envs = [
                 "example",
                 "exercise",
+                "problem",
+                "question",
+                "remark",
                 ]
 
         if env_type in thmbox_envs:

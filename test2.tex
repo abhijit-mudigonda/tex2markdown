@@ -1,0 +1,42 @@
+\begin{proposition}
+    If $f$ is of the form $f(x) = \frac{1}{2}x^TAx - b^Tx$ for positive definite $A$, then $f$ is $\lambda_{max}$-smooth and $\lambda_{min}$-strongly convex. 
+\end{proposition}
+
+\begin{proof}
+   $$\frac{||Ax||}{||x||} \leq \max(|\lambda_{min}|, |\lambda_{max}|) = \lambda_{max}$$ with equality when $x$ is an eigenvector of $A$ with eigenvalue $\lambda_{max}$. A similar argument goes through for the lower bound. 
+\end{proof}
+
+\begin{theorem}
+    Strong convexity guarantees a unique optimal $x_*$, and 
+    $$\frac{\mu}{2}||x-x_*||^2 \leq f(x) - f_* \leq \frac{1}{2\mu}||\nabla f(x)||_*^2$$
+\end{theorem}
+
+Note that here we abuse notation and use $||\cdot||_*$ to refer to the dual norm and $x_*$ to refer to the unique argmin. 
+
+\begin{proof}
+    That strong convexity guarantees a unique optimal $x_*$ is immediate from the definition. 
+
+    Deriving the second part of the theorem from the definition is an exercise, but is a straightforward computation. 
+\end{proof}
+
+The intuition here is that strong convexity tells us that if the gradient is small, then we're close to the unique optimum in both $x$-distance and $f(x)$-distance. Without these bounds, it's possible that we have a small gradient that goes on for a long time, and thus a small gradient doesn't tell us that we're near the point in function or $x$ distance. With strong convexity, we know that a small gradient "cannot lasst", and so we know that our minimum must be nearby. 
+
+
+\begin{remark}
+    \textbf{Question: } Isn't strong convexity a very strong assumption because we're assuming that our function is bounded on both sides by quadratics?
+  
+  
+    \textbf{Answer: } Yes and no. It's very strong in that it gives us very very strong bounds on the number of steps we need that we wouldn't be ale to get otherwise. One easy way to make a convex funcction strongly convex is to replace $f(x)$ with $$\tilde{f}(x) = f(x) + \epsilon x^2$$ This doesn't help too much, as it turns out, because our error now comes from the fact that we've changed our function, and asymptotically we don't improve our bounds. 
+\end{remark}
+
+
+\begin{remark}
+    Where does the step length come from? Well, the main thing we want to avoid is going along the function so far that we overshoot a minimum. From $L$-smoothness, we know that
+    $$||\nabla f(x) - \nabla f(y) || \leq L||x-y|| \implies \frac{1}{L}||\nabla f(x) - \nabla f(y) || \leq ||x-y||$$
+    For any $x_* \in X_*$, $\nabla f(x_*) = 0$ and so 
+    $$\frac{1}{L}||\nabla f(x)|| \leq ||x - x_*||$$
+
+    and thus we always avoid overshooting. 
+\end{remark}
+
+\
