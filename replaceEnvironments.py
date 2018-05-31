@@ -7,8 +7,8 @@ class replaceEnvironments:
     def boxString(
             box_type: str,
             env_name: str,
-            thm_counter: int,
             thm_txt: str,
+            thm_counter: int,
             ) -> str:
         """
             box_type: The type of box we want (must be in box_files)
@@ -41,7 +41,9 @@ class replaceEnvironments:
 
 
         assert (box_type in box_files), "Invalid box type"
-        box_string = "{{% include {0} thmname='{1}' thmnum={2} thmtxt=\"{3}\" %}} <br \>".format(
+        assert (env_name in env_names), "Invalid boxed environment name"
+
+        box_string = "{{% include {0} thmname='{1}' thmnum={2} thmtxt=\"{3}\" %}} <br />".format(
                 box_files[box_type], 
                 env_names[env_name],
                 thm_counter,
@@ -52,8 +54,8 @@ class replaceEnvironments:
 
     def replaceEnvironments(
             env_type: str,
-            thmcounter: int,
             input_text: str,
+            thmcounter=1,
             ) -> str:
         """
             env_type: Which environment is being replaced
@@ -90,18 +92,19 @@ class replaceEnvironments:
         if env_type in thmbox_envs:
             thmcounter += 1
             input_text = input_text.strip()
-            env_output = replaceEnvironments.boxString("theorem", env_type, thmcounter, input_text)
+            env_output = replaceEnvironments.boxString("theorem", env_type, input_text, thmcounter)
         elif env_type in defbox_envs:
             input_text = input_text.strip()
             thmcounter += 1
-            env_output = replaceEnvironments.boxString("definition", env_type, thmcounter, input_text)
+            env_output = replaceEnvironments.boxString("definition", env_type, input_text, thmcounter)
         elif env_type in exbox_envs:
             input_text = input_text.strip()
             thmcounter += 1
-            env_output = replaceEnvironments.boxString("example", env_type, thmcounter, input_text)
+            env_output = replaceEnvironments.boxString("example", env_type, input_text, themcounter)
         elif env_type == "itemize":
             #Bullet points
             env_output = re.sub(r'\\item', r'-', input_text)
+            env_output = re.sub(r'\t','', env_output)
 
         elif env_type == "enumerate":
             #TODO need to make this number each thing rather than bullet points

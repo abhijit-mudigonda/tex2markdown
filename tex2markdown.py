@@ -89,7 +89,7 @@ class tex2markdown:
             begin_length = len("\\begin{}") + len(env_type)
             end_length = len("\\end{}") + len(env_type)
             env_content = output[start_idx+begin_length:end_idx-len("\\end{")]
-            environment_markdown = replaceEnvironments.replaceEnvironments(env_type, thmcounter, env_content)
+            environment_markdown = replaceEnvironments.replaceEnvironments(env_type, env_content, thmcounter)
             output = output[0:start_idx]+environment_markdown+output[end_idx+len(env_type)+1:]
             envs = tex2markdown.getEnvs(output)
         return output

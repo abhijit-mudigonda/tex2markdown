@@ -28,47 +28,22 @@ class replaceSpecialChars:
                 r'|'
                 ]
 
-        input_text = input_text.split()
-        for idx, char in enumerate(input_text):
-            if char == '$':
-                #Current char is a $
-                if last_char == '$':
-                    #At a $ and the last char was also $
-                    doubledollar_mode = not doubledollar_mode
+        char_list = list(input_text)
+        for idx, char in enumerate(char_list):
+            if char == '$' and last_char == '$':
+                #At a $ and the last char was also $
+                doubledollar_mode = not doubledollar_mode
             else:
                 if last_char == '$' and doubledollar_mode is False:
                     #Current char isn't a $ and there was a single $ before current char
                     singledollar_mode = not singledollar_mode
-                elif char in specialchars:
-                    if singledollar_mode is True:
-                        input_text[idx] = "\\"+char
-                    elif doubledollar_mode is True:
-                        pass
-                    else:
-                        pass
-                elif char == '|':
-                    print("Sadness")
-                    if singledollar_mode is True:
-                        input_text[idx] = r'\|'
-                    elif doubledollar_mode is True:
-                        pass
-                    else:
-                        pass
-                elif char == '*':
-                    print("Sadness")
-                    if singledollar_mode is True:
-                        input_text[idx] = r'\*'
-                    elif doubledollar_mode is True:
-                        pass
-                    else:
-                        pass
-                else:
-                    pass
+                if char in specialchars and doubledollar_mode is True:
+                    char_list[idx] = "\\"+char
 
             assert (not (singledollar_mode and doubledollar_mode))
             last_char = char
 
-            return ''.join(input_text)
+        return ''.join(char_list)
 
 
 
